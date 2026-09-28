@@ -62,8 +62,10 @@
     var code = String(text || '').trim().slice(0, 64);
     msg('Got ' + code + '. Opening the count app…');
     if (navigator.vibrate) navigator.vibrate(80);
-    var go = function () { location.replace(appLink(code)); };
-    scanner.stop().then(go, go);
+    var left = false;
+    var go = function () { if (!left) { left = true; location.replace(appLink(code)); } };
+    setTimeout(go, 1500);
+    try { scanner.stop().then(go, go); } catch (e) { go(); }
   }
 
   function start(cameraConfig, config) {
